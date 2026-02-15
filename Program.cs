@@ -447,8 +447,8 @@ internal sealed class VisualizerWindow : GameWindow
         DestroyMenuTextures();
 
         _mp3MenuTitle = new TextLabel { Text = "MP3 LIBRARY" };
-        _mp3MenuHelp = new TextLabel { Text = "↑/↓ выбор • Enter загрузить (без play) • Delete удалить • Esc закрыть • O импорт" };
-        _mp3MenuEmpty = new TextLabel { Text = "Нет загруженных MP3. Нажмите O чтобы импортировать." };
+        _mp3MenuHelp = new TextLabel { Text = "↑/↓ - выбор   • Enter - выбрать   • Del - удалить   • Esc закрыть   • O - импорт" };
+        _mp3MenuEmpty = new TextLabel { Text = "Нет загруженных MP3. Нажмите O, чтобы импортировать песни." };
 
         _mp3MenuTitle.Tex = CreateTextTexture(_mp3MenuTitle.Text, (int)(fontPx * 1.15f), out _mp3MenuTitle.W, out _mp3MenuTitle.H);
         _mp3MenuHelp.Tex = CreateTextTexture(_mp3MenuHelp.Text, fontPx, out _mp3MenuHelp.W, out _mp3MenuHelp.H);
@@ -659,6 +659,8 @@ internal sealed class VisualizerWindow : GameWindow
         base.OnLoad();
         VSync = VSyncMode.Off;
 
+        GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
+
         GL.ClearColor(0f, 0f, 0f, 1f);
         GL.Disable(EnableCap.DepthTest);
         GL.Enable(EnableCap.Blend);
@@ -752,7 +754,7 @@ internal sealed class VisualizerWindow : GameWindow
     {
         string mode = _audioMode == AudioMode.Loopback ? "LOOPBACK" : "MP3";
         string track = (_audioMode == AudioMode.Mp3 && _mp3 is not null) ? $" | {_mp3.TrackName}" : "";
-        Title = $"AudioViz [{mode}{track}] | Space: start/stop | 1-5 layers | H: fullscreen | U: hide UI | Esc: exit | M: mode | O: import mp3 | J/K: prev/next | Enter: restart | Del: remove";
+        Title = $"AudioViz [{mode}{track}] | Space: start/stop | 1-5 layers | H: fullscreen | U: hide UI | Esc: exit | M: mode";
     }
 
 
@@ -943,7 +945,7 @@ internal sealed class VisualizerWindow : GameWindow
     protected override void OnResize(ResizeEventArgs e)
     {
         base.OnResize(e);
-        GL.Viewport(0, 0, Size.X, Size.Y);
+        GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
         RecomputeLayout();
         LayoutMp3Menu();
         MarkMp3MenuDirty();
